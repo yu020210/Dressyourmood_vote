@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dress Your Mood 投票介面</title>
+  <style>
+    body {
+      font-family: 'Noto Sans TC', sans-serif;
+      background-color: #f3f4f8;
+      color: #333;
+      padding: 2em;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      color: #6b5b95;
+      text-align: center;
+    }
+    .section {
+      margin-bottom: 2em;
+    }
+    label {
+      display: block;
+      margin: 0.5em 0;
+    }
+    textarea, input[type="text"] {
+      width: 100%;
+      padding: 0.6em;
+      margin-top: 0.3em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    button {
+      background-color: #6b5b95;
+      color: white;
+      border: none;
+      padding: 0.8em 1.5em;
+      font-size: 1em;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #57467a;
+    }
+    .message {
+      margin-top: 1em;
+      color: #2e7d32;
+    }
+  </style>
+</head>
+<body>
+  <h1>🎨 Dress Your Mood 第六屆公事聚穿搭大賽投票</h1>
+
+  <form id="voteForm">
+    <div class="section">
+      <h3>1. 選擇你/妳今天的情緒顏色</h3>
+      <label><input type="radio" name="mood" value="紅色"> 青金藍（內省）</label>
+      <label><input type="radio" name="mood" value="粉色"> 粉晶粉（柔軟）</label>
+      <label><input type="radio" name="mood" value="黃色"> 黃水晶（自信）</label>
+      <label><input type="radio" name="mood" value="藍色"> 黑曜石（保護）</label>
+      <label><input type="radio" name="mood" value="綠色"> 綠幽靈（修復）</label>
+    </div>
+
+    <div class="section">
+      <h3>2. 為什麼你/妳今天選這個顏色？</h3>
+      <textarea name="reason" rows="3" placeholder="請簡單分享你的感受..." required></textarea>
+    </div>
+
+    <div class="section">
+      <h3>3. 你/妳覺得誰的穿搭最能表達情緒？</h3>
+      <input type="text" name="votedFor" placeholder="請填寫全名" required>
+    </div>
+
+    <button type="submit">送出投票 🗳️</button>
+    <div class="message" id="message"></div>
+  </form>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbwarHTy1S-B3IvJiqfXbnPd6RwXXH-ibnlnLy7rG1jKYGEstFc4gi_mWwyq-P-YYy5c/exec";
+
+    document.getElementById('voteForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const form = e.target;
+      const data = {
+        mood: form.mood.value,
+        reason: form.reason.value,
+        votedFor: form.votedFor.value
+      };
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify(data),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      .then(response => {
+        document.getElementById('message').innerText = "✅ 感謝你投下這一票～你的能量已經送出 💖";
+        form.reset();
+      })
+      .catch(error => {
+        console.error('錯誤:', error);
+        document.getElementById('message').innerText = "❌ 發生錯誤，請稍後再試";
+      });
+    });
+  </script>
+</body>
+</html>
+
